@@ -2,6 +2,7 @@ import express from "express";
 import {
   addAddress,
   addToCart,
+  deleteFromCart,
   getAllUsers,
   getCartItems,
   loginUser,
@@ -26,7 +27,7 @@ userRouter.get("/get-users", isAuthenticated, isAdmin, getAllUsers);
 
 userRouter.put("/update-user", isAuthenticated, updateUserById);
 
-userRouter.put("/update-address", isAuthenticated, addAddress);
+userRouter.post("/add-address", isAuthenticated, addAddress);
 
 userRouter.put(
   "/update-user-password",
@@ -40,6 +41,8 @@ userRouter.get("/logout", isAuthenticated, logoutUser);
 
 userRouter.post("/add-to-cart", isAuthenticated, addToCart);
 
-userRouter.delete("/remove-from-cart", isAuthenticated, removeFromCart);
+userRouter.post("/remove-from-cart", isAuthenticated, removeFromCart);
+
+userRouter.delete("/delete-from-cart", isAuthenticated, deleteFromCart);
 
 export default userRouter;

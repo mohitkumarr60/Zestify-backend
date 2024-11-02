@@ -217,6 +217,27 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
+// function to delete an item from the cart
+export const deleteFromCart = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // remove the item from the cart
+    user.cart = user.cart.filter(
+      (item) => item.itemId.toString() !== req.body.itemId.toString()
+    );
+
+    await user.save();
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // function to get cart items of user
 export const getCartItems = async (req, res) => {
   try {
