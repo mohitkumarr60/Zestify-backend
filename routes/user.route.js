@@ -1,10 +1,13 @@
 import express from "express";
 import {
+  addAddress,
   addToCart,
   getAllUsers,
+  getCartItems,
   loginUser,
   logoutUser,
   registerUser,
+  removeFromCart,
   updateUserById,
   updateUserPasswordById,
   verifyUser,
@@ -23,14 +26,20 @@ userRouter.get("/get-users", isAuthenticated, isAdmin, getAllUsers);
 
 userRouter.put("/update-user", isAuthenticated, updateUserById);
 
+userRouter.put("/update-address", isAuthenticated, addAddress);
+
 userRouter.put(
   "/update-user-password",
   isAuthenticated,
   updateUserPasswordById
 );
 
+userRouter.get("/get-cart", isAuthenticated, getCartItems);
+
 userRouter.get("/logout", isAuthenticated, logoutUser);
 
-userRouter.post('/add-to-cart', isAuthenticated, addToCart)
+userRouter.post("/add-to-cart", isAuthenticated, addToCart);
+
+userRouter.delete("/remove-from-cart", isAuthenticated, removeFromCart);
 
 export default userRouter;

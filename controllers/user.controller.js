@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import MenuItem from "../models/menu.model.js";
 import jwt from "jsonwebtoken";
 import { accessToken } from "../jwt.js";
 import bcrypt from "bcrypt";
@@ -157,29 +158,95 @@ export const logoutUser = async (req, res) => {
   }
 };
 
-// function to add item in cart
+// function to add item to cart
 export const addToCart = async (req, res) => {
   try {
     const { id } = req.user;
     const user = await User.findById(id);
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
-    // check if the item already exists in the cart, if exist add one item in the quantity
+
+    // Check if the item already exists in the cart; if so, increment the quantity
     const existingItem = user.cart.find(
-      (item) => item.itemId === req.body.itemId
+      (item) => item.itemId.toString() === req.body.itemId.toString()
     );
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      const item = req.body.itemId.toString();
-      console.log(item);
-      user.cart.push({ userId: item, quantity: 1 });
+      // Add new item with quantity 1
+      user.cart.push({ itemId: req.body.itemId, quantity: 1 });
     }
 
     await user.save();
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// function to remove an item from the cart
+export const removeFromCart = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // decrease the quantity by 1 or remove the item if quantity is 1
+    const existingItem = user.cart.find(
+      (item) => item.itemId.toString() === req.body.itemId.toString()
+    );
+    if (!existingItem) {
+      return res.status(404).json({ message: "Item not found in cart" });
+    }
+    if (existingItem.quantity === 1) {
+      user.cart = user.cart.filter(
+        (item) => item.itemId.toString() !== req.body.itemId.toString()
+      );
+    } else {
+      existingItem.quantity -= 1;
+    }
+
+    await user.save();
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// function to get cart items of user
+export const getCartItems = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // filter the menu items based on the id present in the user.cart
+    const menuItems = await MenuItem.find({
+      _id: { $in: user.cart.map((item) => item.itemId) },
+    });
+    res.status(200).json(menuItems);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// function to update address to user or add if not exist
+export const addAddress = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.address = req.body.address;
+    await user.save();
     res.status(200).json(user);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
