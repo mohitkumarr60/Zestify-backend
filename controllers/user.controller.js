@@ -78,7 +78,6 @@ export const loginUser = async (req, res) => {
     // set secure cookie
     res.cookie("accessToken", token, {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      maxAge: 3 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: false,
       sameSite: "none",
