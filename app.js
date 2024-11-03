@@ -10,12 +10,12 @@ main().catch((err) => console.log(err));
 
 // database connection
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/zestify");
+  await mongoose.connect(process.env.MONGODB_URL);
   console.log("Connected to MongoDB");
 }
 
 const app = express();
-const port = 5000;
+const PORT = process.env.PORT || 5000;
 
 // cross origin resource sharing
 app.use(
@@ -30,8 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.listen(port, () => {
-  console.log(`Zestify server listening on port http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Zestify server listening on port http://localhost:${PORT}`);
 });
 
 app.get("/", (req, res) => {
