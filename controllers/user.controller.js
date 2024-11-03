@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 // verify user
 export const verifyUser = async (req, res) => {
-  const accessToken = req.cookies.accessToken;
+  const accessToken = req.cookies?.accessToken;
 
   if (!accessToken) {
     return res
@@ -82,7 +82,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Lax",
-      domain: "railway.app",
+      domain: "localhost",
     });
 
     // send success response
