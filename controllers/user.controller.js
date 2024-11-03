@@ -82,7 +82,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Lax",
-      domain: "localhost",
+      domain: "http://localhost:5173",
     });
 
     // send success response
