@@ -80,8 +80,7 @@ export const loginUser = async (req, res) => {
       expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
       maxAge: 3 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
-      domain: "https://zestify-backend-production.up.railway.app/",
+      secure: false,
       sameSite: "none",
     });
 
