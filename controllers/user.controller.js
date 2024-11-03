@@ -147,9 +147,10 @@ export const updateUserPasswordById = async (req, res) => {
 // function to logout user
 export const logoutUser = async (req, res) => {
   try {
-    res.cookie("accessToken", "", {
-      expires: new Date(Date.now()),
+    res.clearCookie("accessToken", {
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
     });
     res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
